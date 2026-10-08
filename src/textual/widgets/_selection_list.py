@@ -575,7 +575,11 @@ class SelectionList(Generic[SelectionType], OptionList):
             event: The event to capture and recreate.
         """
         event.stop()
-        self.post_message(self.SelectionHighlighted(self, event.option_index))
+        try:
+            message = self.SelectionHighlighted(self, event.option_index)
+        except OptionDoesNotExist:
+            return
+        self.post_message(message)
 
     def _on_option_list_option_selected(self, event: OptionList.OptionSelected) -> None:
         """Capture the `OptionList` selected event and turn it into a [`SelectionList`][textual.widgets.SelectionList] event.

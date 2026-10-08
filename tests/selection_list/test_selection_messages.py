@@ -225,3 +225,12 @@ async def test_select_then_deselect_all() -> None:
             ("SelectedChanged", None),
             ("SelectedChanged", None),
         ]
+
+
+def test_stale_highlight_event_ignored() -> None:
+    """A stale highlight event with an invalid option_index should be ignored without raising OptionDoesNotExist."""
+    selection_list = SelectionList[int](*[(str(n), n) for n in range(3)])
+    valid_option = selection_list.get_option_at_index(0)
+    event = OptionList.OptionHighlighted(selection_list, valid_option, 999)
+    selection_list._on_option_list_option_highlighted(event)
+
